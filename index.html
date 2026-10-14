@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="id" class="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- Favicon InstaClone (SVG Data URI) -->
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='instaGrad' x1='0%25' y1='100%25' x2='100%25' y2='0%25'%3E%3Cstop offset='0%25' stop-color='%23fec053'/%3E%3Cstop offset='30%25' stop-color='%23f2203e'/%3E%3Cstop offset='70%25' stop-color='%23c13584'/%3E%3Cstop offset='100%25' stop-color='%235851db'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='100' height='100' rx='26' fill='url(%23instaGrad)'/%3E%3Crect x='22' y='22' width='56' height='56' rx='16' fill='none' stroke='%23ffffff' stroke-width='6.5'/%3E%3Ccircle cx='50' cy='50' r='14' fill='none' stroke='%23ffffff' stroke-width='6.5'/%3E%3Ccircle cx='65' cy='35' r='3.5' fill='%23ffffff'/%3E%3C/svg%3E" />
+  <title>InstaClone — Web Experience</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: '#0095F6',
+            'brand-hover': '#1877F2',
+            darkBg: '#000000',
+            darkCard: '#121212',
+            darkBorder: '#262626'
+          }
+        }
+      }
+    };
+  </script>
+  <link rel="stylesheet" href="css/style.css" />
+  <!-- Font Awesome untuk ikon presisi setara Instagram -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+</head>
+<body class="bg-white dark:bg-darkBg text-neutral-900 dark:text-neutral-100 transition-colors duration-200">
+
+  <!-- ================= AUTH VIEW CONTAINER ================= -->
+  <div id="authView" class="hidden min-h-screen flex items-center justify-center p-4 bg-neutral-50 dark:bg-black">
+    <div class="max-w-md w-full border border-neutral-200 dark:border-darkBorder bg-white dark:bg-darkCard p-8 rounded-xl shadow-sm">
+      <div class="text-center mb-8">
+        <h1 class="text-4xl font-serif font-bold tracking-tight">InstaClone</h1>
+        <p class="text-sm text-neutral-500 mt-2">Masuk untuk melihat foto dan video dari teman Anda.</p>
+      </div>
+
+      <!-- Login Form -->
+      <form id="loginForm" class="space-y-4">
+        <div>
+          <input type="text" id="loginIdentity" required placeholder="Username atau email" class="w-full px-3 py-2.5 text-sm bg-neutral-50 dark:bg-neutral-900 border border-neutral-200 dark:border-darkBorder rounded-lg focus:outline-none focus:border-neutral-400 dark:focus:border-neutral-500" />
+        </div>
+        <div>
+          <input type="password" id="loginPassword" required placeholder="Kata Sandi" class="w-full px-3 py-2.5 text-sm bg-neutral-50 dark:bg-neutral-900 border border-neutral-200 dark:border-darkBorder rounded-lg focus:outline-none focus:border-neutral-400 dark:focus:border-neutral-500" />
+        </div>
+        <button type="submit" id="loginBtn" class="w-full py-2.5 bg-brand hover:bg-brand-hover text-white font-semibold text-sm rounded-lg transition duration-150">Masuk</button>
+      </form>
+
+      <!-- Register Form -->
+      <form id="registerForm" class="space-y-4 hidden">
+        <div>
+          <input type="email" id="regEmail" required placeholder="Alamat Email" class="w-full px-3 py-2.5 text-sm bg-neutral-50 dark:bg-neutral-900 border border-neutral-200 dark:border-darkBorder rounded-lg focus:outline-none focus:border-neutral-400 dark:focus:border-neutral-500" />
+        </div>
+        <div>
+          <input type="text" id="regFullName" required placeholder="Nama Lengkap" class="w-full px-3 py-2.5 text-sm bg-neutral-50 dark:bg-neutral-900 border border-neutral-200 dark:border-darkBorder rounded-lg focus:outline-none focus:border-neutral-400 dark:focus:border-neutral-500" />
+        </div>
+        <div>
+          <input type="text" id="regUsername" required placeholder="Username" class="w-full px-3 py-2.5 text-sm bg-neutral-50 dark:bg-neutral-900 border border-neutral-200 dark:border-darkBorder rounded-lg focus:outline-none focus:border-neutral-400 dark:focus:border-neutral-500" />
+        </div>
+        <div>
+          <input type="password" id="regPassword" required placeholder="Kata Sandi (min 6 karakter)" class="w-full px-3 py-2.5 text-sm bg-neutral-50 dark:bg-neutral-900 border border-neutral-200 dark:border-darkBorder rounded-lg focus:outline-none focus:border-neutral-400 dark:focus:border-neutral-500" />
+        </div>
+        <button type="submit" id="regBtn" class="w-full py-2.5 bg-brand hover:bg-brand-hover text-white font-semibold text-sm rounded-lg transition duration-150">Daftar</button>
+      </form>
+
+      <div class="mt-6 text-center border-t border-neutral-200 dark:border-darkBorder pt-4">
+        <p class="text-sm text-neutral-600 dark:text-neutral-400" id="authSwitchText">
+          Belum punya akun? <a href="#" id="toggleAuthBtn" class="text-brand font-semibold hover:underline">Daftar sekarang</a>
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= MAIN APP VIEW ================= -->
+  <div id="appView" class="hidden min-h-screen flex flex-col md:flex-row">
+    
+    <!-- DESKTOP SIDEBAR -->
+    <aside class="hidden md:flex flex-col justify-between w-64 h-screen sticky top-0 border-r border-neutral-200 dark:border-darkBorder px-5 py-6">
+      <div class="space-y-6">
+        <a href="#feed" class="block px-2 text-2xl font-serif font-bold tracking-tight">InstaClone</a>
+        <nav class="space-y-1 text-base font-medium">
+          <button data-nav="feed" class="nav-item flex items-center space-x-4 w-full p-3 rounded-xl hover:bg-neutral-100 dark:hover:bg-neutral-900 transition">
+            <i class="fa-solid fa-house text-xl"></i><span>Beranda</span>
+          </button>
+          <button data-nav="search" class="nav-item flex items-center space-x-4 w-full p-3 rounded-xl hover:bg-neutral-100 dark:hover:bg-neutral-900 transition">
+            <i class="fa-solid fa-magnifying-glass text-xl"></i><span>Cari</span>
+          </button>
+          <button data-nav="explore" class="nav-item flex items-center space-x-4 w-full p-3 rounded-xl hover:bg-neutral-100 dark:hover:bg-neutral-900 transition">
+            <i class="fa-regular fa-compass text-xl"></i><span>Jelajahi</span>
+          </button>
+          <button id="openCreatePostModalBtn" class="flex items-center space-x-4 w-full p-3 rounded-xl hover:bg-neutral-100 dark:hover:bg-neutral-900 transition">
+            <i class="fa-regular fa-square-plus text-xl"></i><span>Buat</span>
+          </button>
+          <button data-nav="notifications" class="nav-item flex items-center space-x-4 w-full p-3 rounded-xl hover:bg-neutral-100 dark:hover:bg-neutral-900 transition">
+            <i class="fa-regular fa-heart text-xl"></i><span>Notifikasi</span>
+          </button>
+          <button data-nav="profile" class="nav-item flex items-center space-x-4 w-full p-3 rounded-xl hover:bg-neutral-100 dark:hover:bg-neutral-900 transition">
+            <img id="navAvatar" src="" class="w-6 h-6 rounded-full object-cover border border-neutral-300 dark:border-darkBorder" />
+            <span>Profil</span>
+          </button>
+        </nav>
+      </div>
+
+      <div class="space-y-2 border-t border-neutral-200 dark:border-darkBorder pt-4">
+        <button id="themeToggleBtn" class="flex items-center space-x-4 w-full p-3 rounded-xl hover:bg-neutral-100 dark:hover:bg-neutral-900 transition">
+          <i class="fa-solid fa-moon text-xl" id="themeIcon"></i><span id="themeLabel">Mode Gelap</span>
+        </button>
+        <button id="logoutBtn" class="flex items-center space-x-4 w-full p-3 rounded-xl text-red-500 hover:bg-red-50 dark:hover:bg-red-950/30 transition">
+          <i class="fa-solid fa-arrow-right-from-bracket text-xl"></i><span>Keluar</span>
+        </button>
+      </div>
+    </aside>
+
+    <!-- CONTENT DISPLAY AREA -->
+    <main class="flex-1 max-w-4xl mx-auto w-full p-4 md:py-8 pb-20 md:pb-8">
+      
+      <!-- VIEW: FEED -->
+      <section id="sectionFeed" class="space-y-6">
+        <!-- Stories Horizontal Bar -->
+        <div class="border border-neutral-200 dark:border-darkBorder rounded-xl p-4 bg-white dark:bg-darkCard overflow-x-auto flex space-x-4 scrollbar-none" id="storiesStrip">
+          <!-- Story items di-render via JS -->
+        </div>
+
+        <!-- Feed List Items -->
+        <div id="feedList" class="space-y-6 max-w-lg mx-auto">
+          <!-- Skeletons & Posts injected here -->
+        </div>
+      </section>
+
+      <!-- VIEW: EXPLORE -->
+      <section id="sectionExplore" class="hidden">
+        <div class="grid grid-cols-3 gap-1 md:gap-3" id="exploreGrid"></div>
+      </section>
+
+      <!-- VIEW: SEARCH -->
+      <section id="sectionSearch" class="hidden max-w-lg mx-auto space-y-4">
+        <div class="relative">
+          <i class="fa-solid fa-magnifying-glass absolute left-4 top-3.5 text-neutral-400"></i>
+          <input type="text" id="searchInput" placeholder="Cari nama pengguna atau hashtag..." class="w-full pl-11 pr-4 py-3 bg-neutral-100 dark:bg-neutral-900 rounded-xl focus:outline-none focus:ring-1 focus:ring-neutral-400" />
+        </div>
+        <div id="searchResults" class="space-y-2 divide-y divide-neutral-100 dark:divide-darkBorder"></div>
+      </section>
+
+      <!-- VIEW: NOTIFICATIONS -->
+      <section id="sectionNotifications" class="hidden max-w-lg mx-auto space-y-3">
+        <h2 class="text-xl font-bold mb-4">Aktivitas</h2>
+        <div id="notificationsList" class="space-y-2"></div>
+      </section>
+
+      <!-- VIEW: PROFILE -->
+      <section id="sectionProfile" class="hidden space-y-6">
+        <div id="profileHeader" class="flex items-center space-x-6 md:space-x-12 pb-6 border-b border-neutral-200 dark:border-darkBorder">
+          <!-- Render Profile Data -->
+        </div>
+
+        <!-- Profile Tabs -->
+        <div class="flex justify-center space-x-12 border-b border-neutral-200 dark:border-darkBorder text-sm font-semibold tracking-wider">
+          <button id="tabPostsBtn" class="py-3 border-b-2 border-black dark:border-white flex items-center space-x-2">
+            <i class="fa-solid fa-table-cells"></i><span>POSTINGAN</span>
+          </button>
+          <button id="tabSavedBtn" class="py-3 text-neutral-400 flex items-center space-x-2">
+            <i class="fa-regular fa-bookmark"></i><span>TERSIMPAN</span>
+          </button>
+        </div>
+
+        <!-- Profile Grid -->
+        <div class="grid grid-cols-3 gap-1 md:gap-3" id="profileGrid"></div>
+      </section>
+    </main>
+
+    <!-- MOBILE BOTTOM NAVIGATION -->
+    <nav class="md:hidden fixed bottom-0 left-0 right-0 h-14 bg-white dark:bg-darkCard border-t border-neutral-200 dark:border-darkBorder flex justify-around items-center z-40">
+      <button data-nav="feed" class="nav-item p-2"><i class="fa-solid fa-house text-xl"></i></button>
+      <button data-nav="search" class="nav-item p-2"><i class="fa-solid fa-magnifying-glass text-xl"></i></button>
+      <button id="openMobileCreateBtn" class="p-2"><i class="fa-regular fa-square-plus text-xl"></i></button>
+      <button data-nav="notifications" class="nav-item p-2"><i class="fa-regular fa-heart text-xl"></i></button>
+      <button data-nav="profile" class="nav-item p-2">
+        <img id="navAvatarMobile" src="" class="w-6 h-6 rounded-full object-cover" />
+      </button>
+    </nav>
+  </div>
+
+  <!-- ================= MODALS ================= -->
+
+  <!-- Modal: Create Post / Story -->
+  <div id="createModal" class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white dark:bg-darkCard max-w-lg w-full rounded-2xl overflow-hidden border border-neutral-200 dark:border-darkBorder shadow-2xl">
+      <div class="flex items-center justify-between px-4 py-3 border-b border-neutral-200 dark:border-darkBorder">
+        <h3 class="font-bold text-base">Buat Postingan Baru</h3>
+        <button id="closeCreateModalBtn" class="text-neutral-500 hover:text-black dark:hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+      </div>
+      <form id="createPostForm" class="p-4 space-y-4">
+        <div class="flex justify-center border-2 border-dashed border-neutral-300 dark:border-darkBorder rounded-xl p-4 text-center cursor-pointer relative" id="dropArea">
+          <input type="file" id="mediaFileInput" accept="image/*,video/*" class="absolute inset-0 opacity-0 cursor-pointer" required />
+          <div id="uploadPlaceholder" class="space-y-2">
+            <i class="fa-solid fa-cloud-arrow-up text-3xl text-neutral-400"></i>
+            <p class="text-sm font-medium">Pilih file gambar atau video</p>
+          </div>
+          <div id="previewContainer" class="hidden w-full max-h-64 overflow-hidden rounded-lg">
+            <img id="imagePreview" src="" class="w-full h-auto object-cover hidden" />
+            <video id="videoPreview" controls class="w-full h-auto hidden"></video>
+          </div>
+        </div>
+
+        <div class="flex space-x-4">
+          <label class="flex items-center space-x-2 text-sm cursor-pointer">
+            <input type="radio" name="postTypeRadio" value="post" checked class="text-brand focus:ring-0" />
+            <span>Feed Post</span>
+          </label>
+          <label class="flex items-center space-x-2 text-sm cursor-pointer">
+            <input type="radio" name="postTypeRadio" value="story" class="text-brand focus:ring-0" />
+            <span>24h Story</span>
+          </label>
+        </div>
+
+        <div id="captionContainer">
+          <textarea id="captionInput" rows="3" placeholder="Tulis caption dan #hashtag..." class="w-full p-3 text-sm bg-neutral-50 dark:bg-neutral-900 border border-neutral-200 dark:border-darkBorder rounded-xl focus:outline-none focus:ring-1 focus:ring-neutral-400"></textarea>
+        </div>
+
+        <button type="submit" id="submitPostBtn" class="w-full py-2.5 bg-brand hover:bg-brand-hover text-white font-semibold text-sm rounded-xl transition">Bagikan</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: Comments Drawer -->
+  <div id="commentsModal" class="hidden fixed inset-0 z-50 bg-black/60 flex items-end md:items-center justify-center p-0 md:p-4">
+    <div class="bg-white dark:bg-darkCard w-full max-w-lg rounded-t-2xl md:rounded-2xl h-[75vh] flex flex-col border border-neutral-200 dark:border-darkBorder">
+      <div class="flex items-center justify-between px-4 py-3 border-b border-neutral-200 dark:border-darkBorder">
+        <h3 class="font-bold">Komentar</h3>
+        <button id="closeCommentsModalBtn"><i class="fa-solid fa-xmark text-lg"></i></button>
+      </div>
+      <div id="commentsList" class="flex-1 overflow-y-auto p-4 space-y-4"></div>
+      <form id="commentForm" class="p-3 border-t border-neutral-200 dark:border-darkBorder flex items-center space-x-2">
+        <input type="text" id="commentTextInput" placeholder="Tambahkan komentar..." required class="flex-1 px-3 py-2 text-sm bg-neutral-100 dark:bg-neutral-900 rounded-lg focus:outline-none" />
+        <button type="submit" class="text-brand font-semibold text-sm px-2">Kirim</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: Story Viewer -->
+  <div id="storyViewerModal" class="hidden fixed inset-0 z-50 bg-black flex flex-col items-center justify-center">
+    <div class="relative w-full max-w-md h-full md:h-[90vh] bg-neutral-900 rounded-none md:rounded-2xl overflow-hidden flex flex-col">
+      <!-- Progress Bar Container -->
+      <div class="absolute top-2 left-2 right-2 flex space-x-1 z-20" id="storyProgressBars"></div>
+      <!-- User Info Header -->
+      <div class="absolute top-6 left-3 right-3 flex items-center justify-between z-20 text-white">
+        <div class="flex items-center space-x-2">
+          <img id="storyUserAvatar" src="" class="w-8 h-8 rounded-full border border-white/50" />
+          <span id="storyUsername" class="font-bold text-sm"></span>
+        </div>
+        <button id="closeStoryViewerBtn" class="text-white text-lg"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <!-- Media Holder -->
+      <div class="flex-1 flex items-center justify-center relative cursor-pointer" id="storyMediaContainer">
+        <img id="storyImage" src="" class="w-full h-full object-cover hidden" />
+        <video id="storyVideo" playsinline class="w-full h-full object-cover hidden"></video>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div id="toastContainer" class="fixed bottom-16 md:bottom-5 right-5 z-50 flex flex-col space-y-2"></div>
+
+  <!-- Javascript Modules Execution -->
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
